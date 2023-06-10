@@ -17,7 +17,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
+            width: 450px; /* Adjusted width */
         }
         .price-container:hover {
             transform: translateY(-5px);
@@ -55,6 +55,16 @@
             margin-top: 10px;
             color: #666666;
         }
+        .donation {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999999;
+        }
+        .donation-wallet {
+            font-weight: bold;
+            color: #333333;
+            word-break: break-all; /* Added word break */
+        }
     </style>
 </head>
 <body>
@@ -66,6 +76,8 @@
         <div class="indicator-container">
             <div id="indicator" class="indicator"></div>
         </div>
+        <p class="donation">Consider donating to support the developer:</p>
+        <p class="donation-wallet">Nano Wallet Address: <span id="donationAddress">nano_3a3a6cq3xra4mtu1ifgxgc4z364f657gj776a9ruwcuiggkaf78tcopqqmz7</span></p>
     </div>
     <script>
         // Function to update the price every 5 seconds
