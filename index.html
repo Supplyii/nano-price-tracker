@@ -9,6 +9,7 @@
             align-items: center;
             height: 100vh;
             background-color: #f3f3f3;
+            font-family: Arial, sans-serif;
         }
         .price-container {
             text-align: center;
@@ -16,6 +17,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
         }
         .price-container:hover {
             transform: translateY(-5px);
@@ -41,17 +43,25 @@
         .current-price {
             font-size: 36px;
             margin-bottom: 10px;
+            color: #333333;
+        }
+        .price-inr {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #666666;
         }
         .initial-price {
             font-size: 24px;
             margin-top: 10px;
+            color: #666666;
         }
     </style>
 </head>
 <body>
     <div class="price-container">
-        <h1>Nano Price Tracker</h1>
+        <h1 style="margin-top: 0;">Nano Price Tracker</h1>
         <p class="current-price">Current Price: <span id="currentPrice">Loading...</span> USD</p>
+        <p class="price-inr">Current Price: <span id="currentPriceINR">Loading...</span> INR</p>
         <p class="initial-price">Initial Price: <span id="initialPrice">Loading...</span> USD</p>
         <div class="indicator-container">
             <div id="indicator" class="indicator"></div>
@@ -63,12 +73,14 @@
 
         // Function to update the price
         function updatePrice() {
-            fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd')
+            fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd,inr')
                 .then(response => response.json())
                 .then(data => {
                     var nanoPrice = data.nano.usd;
+                    var nanoPriceINR = data.nano.inr;
                     var initialPrice = parseFloat(document.getElementById('initialPrice').textContent);
                     document.getElementById('currentPrice').textContent = nanoPrice;
+                    document.getElementById('currentPriceINR').textContent = nanoPriceINR;
                     var indicator = document.getElementById('indicator');
                     indicator.style.backgroundColor = nanoPrice >= initialPrice ? 'green' : 'red';
                 })
@@ -76,7 +88,7 @@
         }
 
         // Fetch the initial price
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd')
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd,inr')
             .then(response => response.json())
             .then(data => {
                 var initialPrice = data.nano.usd;
