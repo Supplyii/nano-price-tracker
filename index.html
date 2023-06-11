@@ -4,94 +4,78 @@
     <title>Nano Price Tracker</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f3f3f3;
             font-family: Arial, sans-serif;
-        }
-        .price-container {
             text-align: center;
-            background-color: #ffffff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 450px; /* Adjusted width */
+            background-color: #f3f3f3;
         }
-        .price-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+
+        h1 {
+            margin-top: 0;
         }
-        .indicator-container {
+
+        p {
+            margin: 5px 0;
+        }
+
+        .price-container {
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin-top: 10px;
+            justify-content: center;
         }
+
+        #currentPrice {
+            font-size: 36px; /* Updated font size for current price */
+        }
+
+        #initialPrice {
+            font-size: 24px; /* Updated font size for initial price */
+        }
+
         .indicator {
             width: 20px;
             height: 20px;
+            margin-left: 10px;
+            display: inline-block;
             border-radius: 50%;
         }
-        .green {
+
+        .indicator-green {
             background-color: green;
         }
-        .red {
+
+        .indicator-red {
             background-color: red;
         }
-        .current-price {
-            font-size: 36px;
+
+        .details-box {
+            border: 1px solid #ccc;
+            padding: 10px;
             margin-bottom: 10px;
-            color: #333333;
-        }
-        .price-inr {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #666666;
-        }
-        .initial-price {
-            font-size: 24px;
-            margin-top: 10px;
-            color: #666666;
-        }
-        .detail {
-            font-size: 18px;
-            margin-bottom: 5px;
-            color: #666666;
-        }
-        .donation {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #999999;
-        }
-        .donation-wallet {
-            font-weight: bold;
-            color: #333333;
-            word-break: break-all; /* Added word break */
+            text-align: left;
         }
     </style>
 </head>
 <body>
+    <h1>Nano Price Tracker</h1>
     <div class="price-container">
-        <h1 style="margin-top: 0;">Nano Price Tracker</h1>
-        <p class="current-price">Current Price: <span id="currentPrice">Loading...</span> USD</p>
-        <p class="price-inr">Current Price: <span id="currentPriceINR">Loading...</span> INR</p>
-        <p class="initial-price">Initial Price: <span id="initialPrice">Loading...</span> USD</p>
-        <div class="indicator-container">
-            <div id="indicator" class="indicator"></div>
-        </div>
-        <div class="details-container">
-            <p class="detail">Market Cap: <span id="marketCap">Loading...</span></p>
-            <p class="detail">24 Hour Trading Vol: <span id="tradingVol">Loading...</span></p>
-            <p class="detail">Fully Diluted Valuation: <span id="fullyDiluted">Loading...</span></p>
-            <p class="detail">Circulating Supply: <span id="circulatingSupply">Loading...</span></p>
-            <p class="detail">Total Supply: <span id="totalSupply">Loading...</span></p>
-            <p class="detail">Max Supply: <span id="maxSupply">Loading...</span></p>
-        </div>
-        <p class="donation">Consider donating to support the developer:</p>
-        <p class="donation-wallet">Nano Wallet Address: <span id="donationAddress">nano_3a3a6cq3xra4mtu1ifgxgc4z364f657gj776a9ruwcuiggkaf78tcopqqmz7</span></p>
+        <p>Current Price: <span id="currentPrice">Loading...</span> USD</p>
+        <div class="indicator indicator-green"></div>
+        <div class="indicator indicator-red"></div>
     </div>
+    <p>Current Price in INR: <span id="currentPriceINR">Loading...</span> INR</p>
+    <p>Initial Price: <span id="initialPrice">Loading...</span> USD</p>
+    <div class="details-box">
+        <p>Market Cap: <span id="marketCap">86,467,435</span></p>
+        <p>24 Hour Trading Vol: <span id="tradingVol">2,510,866</span></p>
+        <p>Fully Diluted Valuation: <span id="fullyDiluted">86,467,435</span></p>
+        <p>Circulating Supply: <span id="circulatingSupply">133,248,290</span></p>
+        <p>Total Supply: <span id="totalSupply">133,248,290</span></p>
+        <p>Max Supply: <span id="maxSupply">133,248,290</span></p>
+    </div>
+    <p>Consider donating to support the developer:</p>
+    <p>Nano Wallet Address: <span id="donationAddress">nano_3a3a6cq3xra4mtu1ifgxgc4z364f657gj776a9ruwcuiggkaf78tcopqqmz7</span></p>
+
     <script>
         // Function to update the price every 5 seconds
         setInterval(updatePrice, 5000);
@@ -106,8 +90,10 @@
                     var initialPrice = parseFloat(document.getElementById('initialPrice').textContent);
                     document.getElementById('currentPrice').textContent = nanoPrice;
                     document.getElementById('currentPriceINR').textContent = nanoPriceINR;
-                    var indicator = document.getElementById('indicator');
-                    indicator.style.backgroundColor = nanoPrice >= initialPrice ? 'green' : 'red';
+                    var indicatorGreen = document.querySelector('.indicator-green');
+                    var indicatorRed = document.querySelector('.indicator-red');
+                    indicatorGreen.style.display = nanoPrice >= initialPrice ? 'block' : 'none';
+                    indicatorRed.style.display = nanoPrice < initialPrice ? 'block' : 'none';
                 })
                 .catch(error => console.log('Error:', error));
         }
@@ -119,32 +105,20 @@
                 var initialPrice = data.nano.usd;
                 document.getElementById('initialPrice').textContent = initialPrice;
 
-                // Fetch additional details
-                fetch('https://api.coingecko.com/api/v3/coins/nano')
-                    .then(response => response.json())
-                    .then(data => {
-                        var marketCap = data.market_data.market_cap.usd;
-                        var tradingVol = data.market_data.total_volume.usd;
-                        var fullyDiluted = data.market_data.fully_diluted_valuation.usd;
-                        var circulatingSupply = data.market_data.circulating_supply;
-                        var totalSupply = data.market_data.total_supply;
-                        var maxSupply = data.market_data.max_supply;
+                // Format numbers with commas
+                function formatNumber(number) {
+                    return number.toLocaleString();
+                }
 
-                        document.getElementById('marketCap').textContent = formatNumber(marketCap);
-                        document.getElementById('tradingVol').textContent = formatNumber(tradingVol);
-                        document.getElementById('fullyDiluted').textContent = formatNumber(fullyDiluted);
-                        document.getElementById('circulatingSupply').textContent = formatNumber(circulatingSupply);
-                        document.getElementById('totalSupply').textContent = formatNumber(totalSupply);
-                        document.getElementById('maxSupply').textContent = formatNumber(maxSupply);
-                    })
-                    .catch(error => console.log('Error:', error));
+                // Update additional details
+                document.getElementById('marketCap').textContent = formatNumber(86467435);
+                document.getElementById('tradingVol').textContent = formatNumber(2510866);
+                document.getElementById('fullyDiluted').textContent = formatNumber(86467435);
+                document.getElementById('circulatingSupply').textContent = formatNumber(133248290);
+                document.getElementById('totalSupply').textContent = formatNumber(133248290);
+                document.getElementById('maxSupply').textContent = formatNumber(133248290);
             })
             .catch(error => console.log('Error:', error));
-
-        // Format numbers with commas
-        function formatNumber(number) {
-            return number.toLocaleString();
-        }
     </script>
 </body>
 </html>
