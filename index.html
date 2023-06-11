@@ -55,6 +55,11 @@
             margin-top: 10px;
             color: #666666;
         }
+        .detail {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #666666;
+        }
         .donation {
             margin-top: 20px;
             font-size: 14px;
@@ -75,6 +80,14 @@
         <p class="initial-price">Initial Price: <span id="initialPrice">Loading...</span> USD</p>
         <div class="indicator-container">
             <div id="indicator" class="indicator"></div>
+        </div>
+        <div class="details-container">
+            <p class="detail">Market Cap: <span id="marketCap">Loading...</span></p>
+            <p class="detail">24 Hour Trading Vol: <span id="tradingVol">Loading...</span></p>
+            <p class="detail">Fully Diluted Valuation: <span id="fullyDiluted">Loading...</span></p>
+            <p class="detail">Circulating Supply: <span id="circulatingSupply">Loading...</span></p>
+            <p class="detail">Total Supply: <span id="totalSupply">Loading...</span></p>
+            <p class="detail">Max Supply: <span id="maxSupply">Loading...</span></p>
         </div>
         <p class="donation">Consider donating to support the developer:</p>
         <p class="donation-wallet">Nano Wallet Address: <span id="donationAddress">nano_3a3a6cq3xra4mtu1ifgxgc4z364f657gj776a9ruwcuiggkaf78tcopqqmz7</span></p>
@@ -105,8 +118,33 @@
             .then(data => {
                 var initialPrice = data.nano.usd;
                 document.getElementById('initialPrice').textContent = initialPrice;
+
+                // Fetch additional details
+                fetch('https://api.coingecko.com/api/v3/coins/nano')
+                    .then(response => response.json())
+                    .then(data => {
+                        var marketCap = data.market_data.market_cap.usd;
+                        var tradingVol = data.market_data.total_volume.usd;
+                        var fullyDiluted = data.market_data.fully_diluted_valuation.usd;
+                        var circulatingSupply = data.market_data.circulating_supply;
+                        var totalSupply = data.market_data.total_supply;
+                        var maxSupply = data.market_data.max_supply;
+
+                        document.getElementById('marketCap').textContent = formatNumber(marketCap);
+                        document.getElementById('tradingVol').textContent = formatNumber(tradingVol);
+                        document.getElementById('fullyDiluted').textContent = formatNumber(fullyDiluted);
+                        document.getElementById('circulatingSupply').textContent = formatNumber(circulatingSupply);
+                        document.getElementById('totalSupply').textContent = formatNumber(totalSupply);
+                        document.getElementById('maxSupply').textContent = formatNumber(maxSupply);
+                    })
+                    .catch(error => console.log('Error:', error));
             })
             .catch(error => console.log('Error:', error));
+
+        // Format numbers with commas
+        function formatNumber(number) {
+            return number.toLocaleString();
+        }
     </script>
 </body>
 </html>
